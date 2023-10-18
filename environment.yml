@@ -11,4 +11,5 @@ dependencies:
 - cuda91
 - pip
 - pip:
+  - protobuf==3.20.3
   - tensorboard_logger
