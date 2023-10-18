@@ -31,8 +31,14 @@ def get_lkh_executable(url="http://www.akira.ruc.dk/~keld/research/LKH-3/LKH-3.0
         os.remove(file)
 
     executable = os.path.join(filedir, "LKH")
-    assert os.path.isfile(executable)
-    return os.path.abspath(executable)
+    executable_win = os.path.join(filedir, "LKH.exe")
+    if os.path.isfile(executable):
+        output = os.path.abspath(executable)
+    elif os.path.isfile(executable_win):
+        output = os.path.abspath(executable_win)
+    else:
+        assert os.path.isfile(executable) or os.path.abspath(executable_win)
+    return output
 
 
 def solve_lkh(executable, depot, loc, demand, capacity):
@@ -66,7 +72,7 @@ def solve_lkh_log(executable, directory, name, depot, loc, demand, capacity, gri
         else:
             write_vrplib(problem_filename, depot, loc, demand, capacity, grid_size, name=name)
 
-            params = {"PROBLEM_FILE": problem_filename, "OUTPUT_TOUR_FILE": tour_filename, "RUNS": runs, "SEED": 1234}
+            params = {"PROBLEM_FILE": problem_filename, "OUTPUT_TOUR_FILE": tour_filename, "RUNS": runs, "SEED": 1234, "VEHICLES":len(demand), "MTSP_MIN_SIZE":0}
             write_lkh_par(param_filename, params)
 
             with open(log_filename, 'w') as f:
